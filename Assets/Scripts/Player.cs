@@ -10,16 +10,17 @@ public class Player : MonoBehaviour
     private float speed = 5f;
 
     [SerializeField]
-    private Vector3 velocity;
-
-    [SerializeField]
-    private float _gravity = 5f;
+    private float _gravity = 1f;
 
     [SerializeField]
     private float _jumpSpeed = 12f;
 
+    [SerializeField]
+    private float _yVelocity;
+
     void Start()
     {
+        Application.targetFrameRate = 60;
         _controller = GetComponent<CharacterController>();
     }
 
@@ -31,22 +32,21 @@ public class Player : MonoBehaviour
     private void Movement()
     {
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-
-        velocity = moveDirection * speed; 
+        Vector3 velocity = moveDirection * speed; 
 
         if (_controller.isGrounded == true)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                velocity.y += _jumpSpeed;
+                _yVelocity = _jumpSpeed;
             }
         }
         else
         {
-            velocity.y -= _gravity;
+            _yVelocity -= _gravity;
         }
 
-
+        velocity.y = _yVelocity;
 
         _controller.Move(velocity * Time.deltaTime);
     }
