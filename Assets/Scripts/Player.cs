@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
         if (other.tag == "Collectible")
         {
             playerCoins += 1;
+            UIManager.Instance.UpdateCoins(playerCoins);
         }
     }
 
