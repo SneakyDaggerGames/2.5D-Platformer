@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 
     private CharacterController _controller;
 
+    [SerializeField]
     private float speed = 5f;
 
     [SerializeField]
@@ -17,6 +18,11 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float _yVelocity;
+
+    private bool canDoubleJump = false;
+
+    [SerializeField]
+    private int playerCoins = 0;
 
     void Start()
     {
@@ -29,6 +35,14 @@ public class Player : MonoBehaviour
         Movement();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Collectible")
+        {
+            playerCoins += 1;
+        }
+    }
+
     private void Movement()
     {
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
@@ -39,10 +53,16 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _yVelocity = _jumpSpeed;
+                canDoubleJump = true;
             }
         }
         else
         {
+            if (canDoubleJump == true && Input.GetKeyDown(KeyCode.Space))
+            {
+                _yVelocity += _jumpSpeed;
+                canDoubleJump = false;
+            }
             _yVelocity -= _gravity;
         }
 
